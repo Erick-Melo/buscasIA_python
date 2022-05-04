@@ -179,6 +179,41 @@ def busca_a_estrela (matriz, M, N, estado_inicial, estados_finais):
 	else:
 		print ("Nao foi possivel encontrar uma solucao para o problema.")
 
+# Algoritmo: Busca em Profundidade
+# Dada uma matriz, um estado inicial e estados finais, define um conjunto de acoes para alcancar um dos estados finais.
+def busca_em_profundidade (matriz, M, N, estado_inicial, estados_finais):
+	estados_visitados = []
+	estados_expandidos = []
+	profundidade_estados = {}
+	predecessores = {}
+	solucao_encontrada = False
+	print ("Algoritmo: Busca em Profundidade")
+	estados_visitados.append(estado_inicial)
+	profundidade_estados[estado_inicial] = 0
+	predecessores[estado_inicial] = None
+	iteracao = 1
+	while len(estados_visitados) != 0:
+		# mostra_estados_fila (estados_visitados) # Mostra a fila do algoritmo em cada iteracao.
+		estado = estados_visitados.pop(0)
+		if estado in estados_finais:
+			solucao_encontrada = True
+			break
+		estados_sucessores = encontra_estados_sucessores (matriz, M, N, estado)
+		estados_expandidos.append(estado)
+		for i in range (0, len(estados_sucessores)):
+			sucessor = estados_sucessores[i]
+			if sucessor not in estados_expandidos and sucessor not in estados_visitados:
+					estados_visitados.insert(0, estados_sucessores[i])
+					profundidade_estados[estados_sucessores[i]] = profundidade_estados[estado] + 1
+					predecessores[estados_sucessores[i]] = estado
+		iteracao = iteracao + 1
+
+	if solucao_encontrada == True:
+		apresenta_solucao (estado, predecessores, iteracao)
+	else:
+		print ("Nao foi possivel encontrar uma solucao para o problema.")
+
+
 # Fluxo principal do program em Python.
 # Inspirado no problema 'Duende Perdido' da Olimpiada Brasileira de Informatica de 2005 - OBI 2005.
 print(sys.argv[0])
@@ -197,6 +232,7 @@ if len(sys.argv) == 2:
 	print ("Estado Inicial: " + str(estado_inicial))
 	print ("Estado Final: " + str(estados_finais))
 	busca_em_largura (matriz, M, N, estado_inicial[0], estados_finais)
+	busca_em_profundidade (matriz, M, N, estado_inicial[0], estados_finais)
 	busca_a_estrela (matriz, M, N, estado_inicial[0], estados_finais)
 else:
 	print ("Forneca um arquivo CSV para os algoritmos de busca.")
